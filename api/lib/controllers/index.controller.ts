@@ -3,7 +3,7 @@ import {Request, Response, NextFunction, Router} from 'express';
 import path from 'path';
 
 class IndexController implements Controller {
-   public path = '/';
+   public path = '/*';
    public router = Router();
 
    constructor() {

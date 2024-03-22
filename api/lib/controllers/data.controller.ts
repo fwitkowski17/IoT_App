@@ -12,7 +12,6 @@ class DataController implements Controller {
     }
  
     private initializeRoutes() {
-        this.router.get(`${this.path}/:id`, this. getAll);
         this.router.get(`${this.path}/:id`, this.getReading);
         this.router.get(`${this.path}/:id/latest`, this.getLatestReadings);
         this.router.get(`${this.path}/:id/:num`, this.getReadingRange);
@@ -25,7 +24,6 @@ class DataController implements Controller {
     }
     private getLatestReadings = async (request: Request, response: Response, next: NextFunction) => {
         const { id } = request.params;
-        // takie rozwiązanie z powodu niedziałającej funkcji Math.max()
         const max = testArr.reduce((acc, curr) => Math.max(acc, curr), -Infinity);
         response.status(200).json(max);
     };
@@ -42,8 +40,9 @@ class DataController implements Controller {
     private addData = async (request: Request, response: Response, next: NextFunction) => {
         const { elem } = request.body;
         const { id } = request.params;
-        testArr.push(elem);
-        response.status(200).json(elem);
+        //console.log(elem);
+        testArr.push(Number(id));
+        response.status(200).json(id);
     };
     private cleanArray = async (request: Request, response: Response, next: NextFunction) => {
         testArr = [];
@@ -51,9 +50,9 @@ class DataController implements Controller {
     };
     private cleanSelected = async (request: Request, response: Response, next: NextFunction) => {
         const { id } = request.params;
-        testArr.splice(Number(id),1);
-        response.status(200).json("Removed!");
-    }
+        testArr[Number(id)] = 0;
+        response.status(200).json(testArr[Number(id)]);
+    };
  }
  
  export default DataController;

@@ -13,7 +13,7 @@ class App {
        this.initializeControllers(controllers);
    }
    private initializeMiddlewares(): void {
-    this.app.use(bodyParser.json());
+    this.app.use(bodyParser.text());
     this.app.use(morgan('dev'));
     }
  
