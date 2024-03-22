@@ -43,9 +43,8 @@ class DataController implements Controller {
      private addData = async (request: Request, response: Response, next: NextFunction) => {
         const { elem } = request.body;
         const { id } = request.params;
-        const data = [3,4]
-        data.push(elem);
-        response.status(200).json(data);
+        testArr.push(elem);
+        response.status(200).json(elem);
      };
      private cleanArray = async (request: Request, response: Response, next: NextFunction) => {
         testArr = [];
