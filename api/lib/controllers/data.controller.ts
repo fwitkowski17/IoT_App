@@ -26,10 +26,7 @@ class DataController implements Controller {
     private getLatestReadings = async (request: Request, response: Response, next: NextFunction) => {
         const { id } = request.params;
         // takie rozwiązanie z powodu niedziałającej funkcji Math.max()
-        let max = testArr[0];
-        for(var i=1; i< testArr.length; i++) {
-            if(max < testArr[i]) max = testArr[i];
-        }
+        const max = testArr.reduce((acc, curr) => Math.max(acc, curr), -Infinity);
         response.status(200).json(max);
      };
      private getReading = async (request: Request, response: Response, next: NextFunction) => {
