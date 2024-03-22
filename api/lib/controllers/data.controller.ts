@@ -51,9 +51,9 @@ class DataController implements Controller {
     };
     private cleanSelected = async (request: Request, response: Response, next: NextFunction) => {
         const { id } = request.params;
-        testArr[Number(id)] = 0;
-        response.status(200).json(testArr[Number(id)]);
-    };
+        testArr.splice(Number(id),1);
+        response.status(200).json("Removed!");
+    }
  }
  
  export default DataController;
