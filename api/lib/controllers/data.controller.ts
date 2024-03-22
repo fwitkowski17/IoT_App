@@ -12,12 +12,16 @@ class DataController implements Controller {
     }
  
     private initializeRoutes() {
+        this.router.get(`${this.path}/:id`, this. getAll);
         this.router.get(`${this.path}/:id`, this.getReading);
         this.router.get(`${this.path}/:id/latest`, this.getLatestReadings);
         this.router.get(`${this.path}/:id/:num`, this.getReadingRange);
         this.router.post(`${this.path}/:id`, this.addData);
         this.router.delete(`${this.path}/all`, this.cleanArray);
         this.router.delete(`${this.path}/:id`, this.cleanSelected);
+    }
+    private getAll = async (request: Request, response: Response, next: NextFunction) => {
+        response.status(200).json(testArr);
     }
     private getLatestReadings = async (request: Request, response: Response, next: NextFunction) => {
         const { id } = request.params;

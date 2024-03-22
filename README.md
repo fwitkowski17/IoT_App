@@ -6,6 +6,7 @@ Aplikacja na laboratorium z przedmiotu "Technologie webowe w aplikacjach interne
 > npm run dev
 
 ### Endpointy
+* **GET** /api/data/latest
 * **GET** /api/data/{id}/latest
 * **GET** /api/data/{id}
 * **GET** /api/data/{id}/{num}
