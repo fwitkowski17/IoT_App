@@ -35,7 +35,9 @@ class DataController implements Controller {
     }
     private getReadingRange = async (request: Request, response: Response, next: NextFunction) => {
         const { id, num } = request.params;
-        response.status(200).json(testArr.length);
+
+        const array = testArr.slice(Number(id),Number(id)+Number(num));
+        response.status(200).json(array);
     }
     private addData = async (request: Request, response: Response, next: NextFunction) => {
         const { elem } = request.body;
