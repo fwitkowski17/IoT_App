@@ -28,30 +28,30 @@ class DataController implements Controller {
         // takie rozwiązanie z powodu niedziałającej funkcji Math.max()
         const max = testArr.reduce((acc, curr) => Math.max(acc, curr), -Infinity);
         response.status(200).json(max);
-     };
-     private getReading = async (request: Request, response: Response, next: NextFunction) => {
+    };
+    private getReading = async (request: Request, response: Response, next: NextFunction) => {
         const { id } = request.params;
         response.status(200).json(testArr[Number(id)]);
-     }
-     private getReadingRange = async (request: Request, response: Response, next: NextFunction) => {
+    }
+    private getReadingRange = async (request: Request, response: Response, next: NextFunction) => {
         const { id, num } = request.params;
         response.status(200).json(testArr.length);
-     }
-     private addData = async (request: Request, response: Response, next: NextFunction) => {
+    }
+    private addData = async (request: Request, response: Response, next: NextFunction) => {
         const { elem } = request.body;
         const { id } = request.params;
         testArr.push(elem);
         response.status(200).json(elem);
-     };
-     private cleanArray = async (request: Request, response: Response, next: NextFunction) => {
+    };
+    private cleanArray = async (request: Request, response: Response, next: NextFunction) => {
         testArr = [];
         response.status(200).json(testArr);
-     };
-     private cleanSelected = async (request: Request, response: Response, next: NextFunction) => {
+    };
+    private cleanSelected = async (request: Request, response: Response, next: NextFunction) => {
         const { id } = request.params;
         testArr[Number(id)] = 0;
         response.status(200).json(testArr[Number(id)]);
-     };
+    };
  }
  
  export default DataController;
