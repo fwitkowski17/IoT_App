@@ -16,3 +16,4 @@ Aplikacja na laboratorium z przedmiotu "Technologie webowe w aplikacjach interne
 
 ## Wykonane laboratoria
 * :white_check_mark: Laboratorium 5 (22.03.2024)
+* :white_check_mark: Laboratorium 6 (12.04.2024)
