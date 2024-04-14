@@ -4,4 +4,3 @@
     "ignore": ["lib/**/*.spec.ts"],
     "exec": "ts-node ./lib/index.ts"
 }
-   

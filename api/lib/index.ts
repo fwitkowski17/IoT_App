@@ -6,5 +6,4 @@ const app: App = new App([
     new DataController(),
     new IndexController()
 ]);
-
 app.listen();
