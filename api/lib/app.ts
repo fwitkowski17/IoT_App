@@ -4,6 +4,7 @@ import Controller from "./interfaces/controller.interface";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import { apiLogger } from "./middlewares/logger.middleware";
+import { auth } from "./middlewares/auth.middleware";
 
 class App {
   public app: express.Application;
@@ -15,8 +16,9 @@ class App {
     this.connectToDatabase();
   }
   private initializeMiddlewares(): void {
-    this.app.use(bodyParser.text());
+    this.app.use(bodyParser.json());
     this.app.use(apiLogger);
+    this.app.use(auth);
   }
 
   private initializeControllers(controllers: Controller[]): void {

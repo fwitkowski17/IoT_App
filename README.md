@@ -4,21 +4,29 @@ Aplikacja na laboratorium z przedmiotu *Technologie webowe w aplikacjach interne
 
 ## API
 ### Uruchamianie
-Przed uruchomieniem serwera należy utworzyć plik `.env` w którym należy umieścić następującą obowiązkową zawartość:
+Przed uruchomieniem serwera należy utworzyć plik `.env`. W nim należy umieścić następującą zawartość (bez niej aplikacja się nie uruchomi):
 ```ini
-MONGODB_URI=link do bazy danych mongodb
+MONGODB_URI='<link do bazy danych MongoDB>'
 ```
-Nieobowiązkowa zawartość, niekonieczna do działania aplikacji:
+Dodatkowo w pliku można skonfigurować inne parametry, które nadpiszą domyślne:
 ```ini
 PORT=3200
+JWT_TOKEN=secret
 ```
 Następnie należy zainstalować zależności poleceniem `npm install` będać w katalogu `api`. Serwer w trybie deweloperskim można uruchomić korzystając z jednego z tych poleceń:
-```
-npm run dev
-npm run watch
+
+* `npm run dev`
+* `npm run start`
+* `npm run watch` (korzysta z `nodemon` celem przeładowywania bez konieczności ponownego uruchamiania aplikacji)
+
+Pełen zestaw komend:
+```bash
+git clone https://github.com/fwitkowski17/IoT_App.git
+cd IoT_App/api
+npm install
+echo MONGODB_URI='<link do bazy MongoDB>' > .env
 npm run start
 ```
-`npm run watch` - korzysta z `nodemon` celem przeładowania bez konieczności ponownego uruchamiania aplikacji
 
 ### Endpointy
 * **GET** /api/data/latest
@@ -32,3 +40,4 @@ npm run start
 ## Wykonane laboratoria
 * :white_check_mark: Laboratorium 5 (22.03.2024)
 * :white_check_mark: Laboratorium 6 (12.04.2024)
+* :white_check_mark: Laboratorium 7 (19.04.2024)

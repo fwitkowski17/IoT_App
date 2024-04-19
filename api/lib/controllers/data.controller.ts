@@ -2,6 +2,8 @@ import { checkIdParam } from "../middlewares/deviceIdParam.middleware";
 import Controller from "../interfaces/controller.interface";
 import { Request, Response, NextFunction, Router } from 'express';
 import DataService from "../modules/services/data.service";
+import Joi from "joi";
+import { IData } from "../modules/models/data.model";
 
 class DataController implements Controller {
     public path = '/api/data';
@@ -47,17 +49,29 @@ class DataController implements Controller {
     private addData = async (request: Request, response: Response, next: NextFunction) => {
         const { air } = request.body;
         const { id } = request.params;
-     
-        const data = {
-            temperature: air[0].value,
-            pressure: air[1].value,
-            humidity: air[2].value,
-            deviceId: Number(id),
-        }
+
+        const schema = Joi.object({
+            air: Joi.array()
+                .items(
+                    Joi.object({
+                        id: Joi.number().integer().positive().required(),
+                        value: Joi.number().positive().required()
+                    })
+                )
+                .unique((a, b) => a.id === b.id),
+            deviceId: Joi.number().integer().positive().valid(parseInt(id, 10)).required()
+         });
        
         try {
-            await this.dataService.createData(data);
-            response.status(200).json(data);
+            const validatedData = await schema.validateAsync({air, deviceId: parseInt(id, 10)});
+            const readingData: IData = {
+                temperature: validatedData.air[0].value,
+                pressure: validatedData.air[1].value,
+                humidity: validatedData.air[2].value,
+                deviceId: validatedData.deviceId,
+            }
+            await this.dataService.createData(readingData);
+            response.status(200).json(readingData);
         } catch (error: any) {
             console.error(`Validation Error: ${error.message}`);
             response.status(400).json({ error: 'Invalid input data.' });
