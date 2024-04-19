@@ -20,7 +20,6 @@ class UserService {
    public async getByEmailOrName(name: string) {
        try {
         const result = await UserModel.findOne({ $or: [{ email: name }, { name: name }] });
-        console.log(result);
         if (result) {
             return result;
         }

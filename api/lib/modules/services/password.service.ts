@@ -1,6 +1,5 @@
 import PasswordModel  from '../schemas/password.schema';
-
-var bcrypt = require('bcrypt');
+import bcrypt from "bcrypt";
 
 class PasswordService {
    public async createOrUpdate(data: any) {

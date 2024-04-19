@@ -12,6 +12,8 @@
   "author": "Filip Witkowski",
   "license": "ISC",
   "dependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.2",
     "bcrypt": "^5.0.2",
     "body-parser": "1.20.1",
     "dotenv": "^16.4.5",
@@ -23,11 +25,9 @@
     "mongoose": "8.2.1"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.14",
     "@types/morgan": "1.9.3",
     "@types/node": "^14.18.33",
-    "@types/jsonwebtoken": "^9.0.2",
     "joi": "^17.12.3",
     "node-gyp": "^6.1.0",
     "nodemon": "^3.1.0",

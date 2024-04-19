@@ -58,8 +58,7 @@ private createNewOrUpdate = async (request: Request, response: Response, next: N
 };
 
 private removeHashSession = async (request: Request, response: Response, next: NextFunction) => {
-   const {userId} = request.params
-
+   const {userId} = request.params;
    try {
        const result = await this.tokenService.remove(userId);
        response.status(200).send(result);
@@ -68,7 +67,6 @@ private removeHashSession = async (request: Request, response: Response, next: N
        response.status(401).json({error: 'Unauthorized'});
    }
 };
-
 }
 
 export default UserController;

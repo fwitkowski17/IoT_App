@@ -8,9 +8,9 @@ Przed uruchomieniem serwera należy utworzyć plik `.env`. W nim należy umieśc
 ```ini
 MONGODB_URI='<link do bazy danych MongoDB>'
 ```
-Dodatkowo w pliku można skonfigurować inne parametry, które nadpiszą domyślne:
+Dodatkowo w pliku można zdefiniować inne parametry, które nadpiszą domyślne:
 ```ini
-PORT=3200
+PORT=3100
 JWT_TOKEN=secret
 ```
 Następnie należy zainstalować zależności poleceniem `npm install` będać w katalogu `api`. Serwer w trybie deweloperskim można uruchomić korzystając z jednego z tych poleceń:
@@ -34,8 +34,11 @@ npm run start
 * **GET** /api/data/{id}
 * **GET** /api/data/{id}/{num}
 * **POST** /api/data/{id}
+* **POST** /api/user/auth
+* **POST** /api/user/create
 * **DELETE** /api/data/all
-* **DELETE** /api/data/{id} 
+* **DELETE** /api/data/{id}
+* **DELET** /api/user/logout/{userId} 
 
 ## Wykonane laboratoria
 * :white_check_mark: Laboratorium 5 (22.03.2024)

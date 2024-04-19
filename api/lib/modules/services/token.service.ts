@@ -1,7 +1,6 @@
 import TokenModel  from '../schemas/token.schema';
 import {config} from '../../config';
-
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 class TokenService {
    public async create(user: any) {

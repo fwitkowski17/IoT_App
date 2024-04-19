@@ -1,12 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { config } from '../config';
 import { IUser } from "../modules/models/user.model";
-
-const jwt = require("jsonwebtoken");
+import jwt from 'jsonwebtoken';
 
 export const auth = (request: Request, response: Response, next: NextFunction) => {
     let token = request.headers['x-access-token'] || request.headers['authorization'];
-    var jwt = require('jsonwebtoken');
    if (token && typeof token === 'string') {
        if (token.startsWith('Bearer ')) {
            token = token.slice(7, token.length);
