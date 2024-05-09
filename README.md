@@ -36,9 +36,12 @@ npm run start
 * **POST** /api/data/{id}
 * **POST** /api/user/auth
 * **POST** /api/user/create
+* **POST** /api/user/reset
+* **PUT** /api/user/{userId}
 * **DELETE** /api/data/all
 * **DELETE** /api/data/{id}
-* **DELET** /api/user/logout/{userId} 
+* **DELETE** /api/user/logout/{userId} 
+* **DELETE** /api/user/{userId}
 
 ## Wykonane laboratoria
 * :white_check_mark: Laboratorium 5 (22.03.2024)

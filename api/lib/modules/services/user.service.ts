@@ -6,7 +6,8 @@ class UserService {
        console.log(user)
        try {
            if (!user._id) {
-               const dataModel = new UserModel(user);
+               const isAdmin = user.role == "admin"
+               const dataModel = new UserModel(user, isAdmin);
                return await dataModel.save();
            } else {
                return await UserModel.findByIdAndUpdate(user._id, { $set: user }, { new: true });

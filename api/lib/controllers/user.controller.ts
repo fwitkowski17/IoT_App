@@ -20,6 +20,7 @@ class UserController implements Controller {
    private initializeRoutes() {
        this.router.post(`${this.path}/create`, this.createNewOrUpdate);
        this.router.post(`${this.path}/auth`, this.authenticate);
+       this.router.post(`${this.path}/reset`, this.resetPassword);
        this.router.delete(`${this.path}/logout/:userId`, auth, this.removeHashSession);
    }
    private authenticate = async (request: Request, response: Response, next: NextFunction) => {
@@ -56,6 +57,26 @@ private createNewOrUpdate = async (request: Request, response: Response, next: N
    }
 
 };
+private resetPassword = async (request: Request, response: Response, next: NextFunction) => {
+    const userData = request.body;
+    try {
+        const user = await this.userService.getByEmailOrName(userData)
+        if (user) {
+            const password = this.generatePassword()
+            const hashedPassword = await this.passwordService.hashPassword(password)
+            await this.passwordService.createOrUpdate({
+                userId: user._id,
+                password: hashedPassword
+            })
+            response.status(200).json(user);
+        }
+        else response.status(404).json({error: "Not Found", value: 'No user'})
+    } catch (error) {
+        console.error(`Validation Error: ${error}`);
+        response.status(400).json({error: 'Bad request', value: error});
+    }
+ 
+ };
 
 private removeHashSession = async (request: Request, response: Response, next: NextFunction) => {
    const {userId} = request.params;
@@ -67,6 +88,14 @@ private removeHashSession = async (request: Request, response: Response, next: N
        response.status(401).json({error: 'Unauthorized'});
    }
 };
+private generatePassword() {
+    const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    let password = "";
+    for (let i = 0; i < 10; i++) {
+      password += characters[Math.floor(Math.random() * characters.length)];
+    }
+    return password;
+}
 }
 
 export default UserController;
