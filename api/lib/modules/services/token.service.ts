@@ -52,6 +52,18 @@ class TokenService {
         throw new Error('Error while removing token');
     }
 }
+public async removeExpiredTokens() {
+    try {
+        const currentTime = new Date().getTime();
+        const result = await TokenModel.deleteMany({ createDate: { $lt: currentTime } });
+        console.log(result.deletedCount + ' wygasłych tokenów zostało usuniętych.');
+        return result;
+    } catch (error) {
+        console.error('Błąd podczas usuwania wygasłych tokenów:', error);
+        throw new Error('Błąd podczas usuwania wygasłych tokenów');
+    }
+}
+
 }
 
 export default TokenService;
