@@ -38,9 +38,10 @@ npm run start
 * **POST** /api/user/create
 * **DELETE** /api/data/all
 * **DELETE** /api/data/{id}
-* **DELET** /api/user/logout/{userId} 
+* **DELETE** /api/user/logout/{userId} 
 
 ## Wykonane laboratoria
 * :white_check_mark: Laboratorium 5 (22.03.2024)
 * :white_check_mark: Laboratorium 6 (12.04.2024)
 * :white_check_mark: Laboratorium 7 (19.04.2024)
+* :white_check_mark: Laboratorium 8 (26.04.2024)
