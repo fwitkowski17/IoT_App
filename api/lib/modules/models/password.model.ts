@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 
 export interface IPassword {
-   userId: Schema.Types.ObjectId;
-   password: string;
+    userId: Schema.Types.ObjectId;
+    password: string;
 }

@@ -1,3 +1,8 @@
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import { config } from '../config';
+import { IUser } from "../modules/models/user.model";
+
 export const admin = (request: Request, response: Response, next: NextFunction) => {
     let token = request.headers['x-access-token'] || request.headers['authorization'];
     if (token && typeof token === 'string') {
@@ -22,4 +27,4 @@ export const admin = (request: Request, response: Response, next: NextFunction) 
     } else {
         return response.status(401).send('Access denied. No token provided.');
     }
- };
+};

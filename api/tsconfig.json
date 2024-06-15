@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "forceConsistentCasingInFileNames": true,
     "target": "es5",
     "outDir": "./dist",
     "baseUrl": "./lib",
@@ -17,5 +16,4 @@
   "exclude": [
     "node_modules"
   ]
- }
- 
+}

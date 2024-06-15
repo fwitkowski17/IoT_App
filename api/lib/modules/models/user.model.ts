@@ -5,4 +5,4 @@ export interface IUser {
     role?: string;
     active?: boolean;
     isAdmin?: boolean;
- } 
+}
