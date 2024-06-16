@@ -6,6 +6,7 @@ import Controller from './interfaces/controller.interface';
 import { config } from './config'
 import logRequest from './middlewares/logRequest.middleware';
 
+
 class Index {
   public app: express.Application;
 

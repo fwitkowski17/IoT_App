@@ -5,6 +5,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonIcon from '@mui/icons-material/Person';
 import serverConfig from "../server-config.ts";
 import {sortElemsByDeviceId} from "../utils/helper.ts";
+import axios from "axios";
 
 interface Account {
     username: string;
@@ -29,6 +30,16 @@ class LoginForm extends Component<{}, State> {
         },
         errors: {}
     };
+
+    checkServerAvailability = async (): Promise<boolean> => {
+        try {
+            const response = await axios.get(`${serverConfig.serverUrl}health`);
+            return response.status === 200;
+        } catch (error) {
+            console.error('Error checking server connection:', error);
+            return false;
+        }
+    }
 
     validate = (): Errors | null => {
         const errors: Errors = {};
@@ -75,7 +86,7 @@ class LoginForm extends Component<{}, State> {
 
     render() {
         return (
-            <Container maxWidth="sm">
+            <Container maxWidth="sm" style={{"padding": "30px"}}>
                 <Typography variant="h4" component="h1" gutterBottom noWrap sx={{
                         mr: 2,
                         display: {xs: 'none', md: 'flex'},
@@ -120,7 +131,7 @@ class LoginForm extends Component<{}, State> {
                         Login
                     </Button>
                     <Typography variant={"h7"} component={"p"} noWrap sx={{mr: 2, display: {xs: 'none', md: 'flex'}, alignItems: 'center'}} marginTop={"10px"}>
-                        <PersonAddIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/> No account? Create it <Link variant={"body2"} to={"/register"}>here</Link>.
+                        <PersonAddIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/> No account? Create it <Link to={"/register"}>here</Link>.
                     </Typography>
                 </form>
             </Container>

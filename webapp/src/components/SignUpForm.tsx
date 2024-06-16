@@ -78,7 +78,7 @@ const SignUpForm: React.FC = () => {
     };
 
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" style={{"padding": "20px"}}>
             <Typography variant="h4" component="h1" gutterBottom>
                 Sign Up
             </Typography>

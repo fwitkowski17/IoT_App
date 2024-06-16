@@ -8,6 +8,7 @@ import Home from "./components/Home";
 import {isExpired} from "react-jwt";
 import Login from "./components/Login.tsx";
 import SignUpForm from "./components/SignUpForm.tsx";
+import ServerAvailability from "./components/ServerAvailability.tsx";
 
 const darkTheme = createTheme({
     palette: {
@@ -22,12 +23,14 @@ function App() {
             <ThemeProvider theme={darkTheme}>
                 <CssBaseline/>
                 <Navbar></Navbar>
-                <Routes>
-                    <Route path="/" element={isExpired(localStorage.getItem('token')) ? <Navigate replace to={"/login"}/> : <Home/>}/>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/register" element={<SignUpForm />}/>
-                    <Route path="/device/:id" element={isExpired(localStorage.getItem('token')) ? <Navigate replace to={"/login"}/> : <Dashboard/> } />
-                </Routes>
+                <ServerAvailability>
+                    <Routes>
+                        <Route path="/" element={isExpired(localStorage.getItem('token')) ? <Navigate replace to={"/login"}/> : <Home/>}/>
+                        <Route path="/login" element={<Login/>}/>
+                        <Route path="/register" element={<SignUpForm />}/>
+                        <Route path="/device/:id" element={isExpired(localStorage.getItem('token')) ? <Navigate replace to={"/login"}/> : <Dashboard/> } />
+                    </Routes>
+                </ServerAvailability>
             </ThemeProvider>
         </Router>
     )
