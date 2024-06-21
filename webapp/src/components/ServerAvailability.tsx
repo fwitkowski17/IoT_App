@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {CircularProgress, Alert, AlertTitle} from '@mui/material';
+import {Alert, AlertTitle, Container} from '@mui/material';
 import serverConfig from '../server-config.ts';
+import Loader from "./shared/Loader.tsx";
 
 interface State {
     responseData?: {
@@ -24,7 +25,7 @@ const ServerAvailablility: React.FC = (props) => {
                 if (response.status === 200) {
                     setState({ responseData: response.data});
                 } else {
-                    setState({ serverErrorMessage: 'Server connection error.', responseData: response.data});
+                    setState({ serverErrorMessage: 'Error', responseData: response.data});
                 }
             } catch (error) {
                 if(error.response) {
@@ -32,7 +33,7 @@ const ServerAvailablility: React.FC = (props) => {
                     setState({ serverErrorMessage: error.response.data.errorDesc, responseData: error.response.data });
                 } else if(error.request) {
                     console.error('Server is unreachable', error);
-                    setState({ serverErrorMessage: "Server is unreachable", responseData: {status: "Network error", errorDesc: "Server is unreachable"} });
+                    setState({ serverErrorMessage: "Error", responseData: {status: "Network error", errorDesc: "Server is unreachable. Please try again later."} });
                 }
             }
         };
@@ -40,14 +41,18 @@ const ServerAvailablility: React.FC = (props) => {
         checkServerConnection();
     }, []);
 
-    return state.serverErrorMessage
-        ? <Alert severity="error">
-            <AlertTitle>{state.responseData?.status}</AlertTitle>
-            {state.serverErrorMessage}
-        </Alert>
-        : state.responseData
-            ? <>{props.children}</>
-            : <CircularProgress />
+    return <>
+            {state.serverErrorMessage
+                ? <Container maxWidth={"md"} sx={{padding: "30px"}}>
+                    <Alert severity="error">
+                    <AlertTitle>{state.responseData?.status}</AlertTitle>
+                    {state.responseData?.errorDesc}
+                    </Alert>
+                    </Container>
+                : state.responseData
+                    ? <>{props.children}</>
+                    : <Loader/>}
+        </>
 };
 
 export default ServerAvailablility;

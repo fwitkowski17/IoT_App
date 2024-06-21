@@ -12,16 +12,30 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import LanguageIcon from '@mui/icons-material/Language';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import {decodeToken, isExpired} from "react-jwt";
+import serverConfig from "../../server-config.ts";
+import axios from "axios";
 
-const pages = ['Devices state'];
-const settings = ['Profile', 'Logout'];
-const unlogged = ['Login', 'Register'];
+interface NavbarItem {
+    label: string;
+    to: string;
+}
+
+const user_no_logged: NavbarItem[] = [
+    {label: 'Login', to: '/login'},
+    {label: 'Register', to: '/register'},
+]
+
+const pages: NavbarItem[] = [
+    {label: 'Devices state', to: '/device/1'},
+    {label: 'Device summary', to: '/'}
+]
 
 function Navbar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
+    const navigate = useNavigate();
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -37,11 +51,31 @@ function Navbar() {
         setAnchorElUser(null);
     };
 
+    const handleLogout = () => {
+        const token: string = localStorage.getItem('token');
+        const id = decodeToken(token).userId;
+        axios.delete(`${serverConfig.serverUrl}user/logout/${id}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': ' application/json',
+                'x-access-token': token
+            }
+        })
+            .then((response) => {
+                if(response.status == 200) {
+                    localStorage.removeItem('token');
+                    navigate("/login?logout=true");
+                }
+            })
+            .catch((error: Error) => {
+                console.log(error);
+            })
+    }
+
     return (
         <AppBar position="static">
             <Container maxWidth={false} sx={{backgroundColor: 'black'}}>
                 <Toolbar disableGutters>
-
                     <Typography
                         variant="h6"
                         noWrap
@@ -92,26 +126,52 @@ function Navbar() {
                             }}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
+                                <MenuItem key={page.label} onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">
+                                        <Link to={page.to} style={{color: 'white'}}>{page.label}</Link>
+                                    </Typography>
                                 </MenuItem>
                             ))}
-
+                            {isExpired(localStorage.getItem('token')) ? user_no_logged.map((page) => (
+                                <MenuItem key={page.label} onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">
+                                        <Link style={{color: 'white'}} to={page.to}>{page.label}</Link>
+                                    </Typography>
+                                </MenuItem>
+                                )) :
+                                <MenuItem key={"Logout"} onClick={handleCloseNavMenu}>
+                                    <Typography textAlign={"center"}>
+                                        <Link onClick={handleLogout} style={{color: 'white'}}>Logout</Link>
+                                    </Typography>
+                                </MenuItem>
+                            }
                         </Menu>
                     </Box>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                         {pages.map((page) => (
                             <Button
-                                key={page}
+                                key={page.label}
                                 onClick={handleCloseNavMenu}
                                 sx={{my: 2, color: 'white', display: 'block'}}
                             >
-                                {page}
+                                {page.label}
                             </Button>
                         ))}
                     </Box>
 
-                    <div className="logo"></div>
+                    <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, justifyContent: 'flex-end'}}>
+                        {isExpired(localStorage.getItem('token')) ? user_no_logged.map((page) => (
+                            <Typography key={page.label} variant={"button"} component={"button"} sx={{my: 2, color: 'white', display: 'block', margin: '10px'}}>
+                                <Link style={{color: 'white'}} to={page.to}>{page.label}</Link>
+                            </Typography>
+                        )) :
+                            <Button
+                                key={"Logout"}
+                                onClick={handleLogout}
+                                sx={{my: 2, color: 'white', display: 'block'}}
+                            >Logout</Button>
+                        }
+                    </Box>
 
                     {false && <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Open settings">
@@ -135,11 +195,6 @@ function Navbar() {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
-                                </MenuItem>
-                            ))}
                         </Menu>
                     </Box>}
                 </Toolbar>

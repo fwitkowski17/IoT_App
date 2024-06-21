@@ -3,7 +3,6 @@ import {IUser} from "../models/user.model";
 
 class UserService {
     public async createNewOrUpdate(user: IUser) {
-        console.log(user)
         try {
             if (!user._id) {
                 const dataModel = new UserModel(user);

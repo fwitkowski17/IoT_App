@@ -17,7 +17,14 @@ function Home() {
 
     const fetchData = () => {
         setLoaderState(true);
-        fetch(`${serverConfig.serverUrl}data/latest`)
+        fetch(`${serverConfig.serverUrl}data/latest`, {
+            method: "GET",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': ' application/json',
+                'x-access-token': localStorage.getItem('token')
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 setData(sortElemsByDeviceId(data));

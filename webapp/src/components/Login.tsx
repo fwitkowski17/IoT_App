@@ -1,10 +1,9 @@
 import React, { Component, ChangeEvent, FormEvent } from "react";
-import { TextField, Button, Container, Typography, Alert } from '@mui/material';
-import {Link} from "react-router-dom";
+import {TextField, Button, Container, Typography, Alert, AlertTitle} from '@mui/material';
+import {Link, Navigate} from "react-router-dom";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonIcon from '@mui/icons-material/Person';
 import serverConfig from "../server-config.ts";
-import {sortElemsByDeviceId} from "../utils/helper.ts";
 import axios from "axios";
 
 interface Account {
@@ -20,6 +19,11 @@ interface Errors {
 interface State {
     account: Account;
     errors: Errors;
+    success: boolean;
+    logout: boolean;
+    showInfo: boolean;
+    loginError: boolean;
+    loginSuccess: boolean;
 }
 
 class LoginForm extends Component<{}, State> {
@@ -28,17 +32,20 @@ class LoginForm extends Component<{}, State> {
             username: "",
             password: ""
         },
-        errors: {}
+        errors: {},
+        success: false,
+        logout: false,
+        showInfo: false,
+        loginError: false,
+        loginSuccess: false
     };
 
-    checkServerAvailability = async (): Promise<boolean> => {
-        try {
-            const response = await axios.get(`${serverConfig.serverUrl}health`);
-            return response.status === 200;
-        } catch (error) {
-            console.error('Error checking server connection:', error);
-            return false;
-        }
+    componentDidMount() {
+        const urlParams = new URLSearchParams(window.location.search)
+        const success = urlParams.get('success') === "true"
+        const logout = urlParams.get('logout') === "true"
+        const showInfo = urlParams.get('showInfo') === "true"
+        this.setState({success, logout, showInfo})
     }
 
     validate = (): Errors | null => {
@@ -67,15 +74,20 @@ class LoginForm extends Component<{}, State> {
             "password": account.password
         })
 
-        fetch(`${serverConfig.serverUrl}auth`)
-            .then(response => response.json())
-            .then(data => {
-                setData(sortElemsByDeviceId(data));
-                setLoaderState(false)
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
+        axios.post(`${serverConfig.serverUrl}user/auth`, {
+            login: account.username,
+            password: account.password
+        }).then(response => {
+            if(response.status == 200) {
+                localStorage.setItem("token", response.data.token)
+                this.setState({loginSuccess: true})
+            }
+        }).catch(error => {
+            if(error.response.status == 401) {
+                this.setState({loginError: true})
+            }
+            console.error('Error logging in!', error)
+        })
     };
 
     handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -85,8 +97,25 @@ class LoginForm extends Component<{}, State> {
     };
 
     render() {
-        return (
+        return (<>
+            {this.state.loginSuccess && (<Navigate replace to={"/"} />)}
             <Container maxWidth="sm" style={{"padding": "30px"}}>
+                {this.state.success && (<Alert severity={"success"} sx={{"margin-bottom": "20px"}}>
+                    <AlertTitle>Account successfully created!</AlertTitle>
+                    Now you can login with provided details.
+                </Alert>)}
+                {this.state.loginError && (<Alert severity={"error"} sx={{"margin-bottom": "20px"}}>
+                    <AlertTitle>Incorrect login details!</AlertTitle>
+                    Incorrect provided login or password.
+                </Alert>)}
+                {this.state.logout && (<Alert severity={"info"} sx={{"margin-bottom": "20px"}}>
+                    <AlertTitle>Log out</AlertTitle>
+                    User successfully logged out.
+                </Alert>)}
+                {this.state.showInfo && (<Alert severity={"warning"} sx={{"margin-bottom": "20px"}}>
+                    <AlertTitle>No permissions for this feature</AlertTitle>
+                    To access detailed data, you need to log in.
+                </Alert> )}
                 <Typography variant="h4" component="h1" gutterBottom noWrap sx={{
                         mr: 2,
                         display: {xs: 'none', md: 'flex'},
@@ -135,6 +164,7 @@ class LoginForm extends Component<{}, State> {
                     </Typography>
                 </form>
             </Container>
+            </>
         );
     }
 }

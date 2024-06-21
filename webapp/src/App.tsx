@@ -9,6 +9,7 @@ import {isExpired} from "react-jwt";
 import Login from "./components/Login.tsx";
 import SignUpForm from "./components/SignUpForm.tsx";
 import ServerAvailability from "./components/ServerAvailability.tsx";
+import Footer from "./components/shared/Footer.tsx"
 
 const darkTheme = createTheme({
     palette: {
@@ -25,12 +26,13 @@ function App() {
                 <Navbar></Navbar>
                 <ServerAvailability>
                     <Routes>
-                        <Route path="/" element={isExpired(localStorage.getItem('token')) ? <Navigate replace to={"/login"}/> : <Home/>}/>
+                        <Route path="/" element={<Home/>}/>
                         <Route path="/login" element={<Login/>}/>
                         <Route path="/register" element={<SignUpForm />}/>
-                        <Route path="/device/:id" element={isExpired(localStorage.getItem('token')) ? <Navigate replace to={"/login"}/> : <Dashboard/> } />
+                        <Route path="/device/:id" element={isExpired(localStorage.getItem('token')) ? <Navigate replace to={"/login?showInfo=true"}/> : <Dashboard/> } />
                     </Routes>
                 </ServerAvailability>
+                <Footer></Footer>
             </ThemeProvider>
         </Router>
     )

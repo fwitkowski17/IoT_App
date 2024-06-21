@@ -41,7 +41,6 @@ class TokenService {
     }
 
     public async remove(userId: string) {
-        console.log(userId)
         try {
             const result = await TokenModel.deleteOne({ userId: userId });
             console.log('result', result)

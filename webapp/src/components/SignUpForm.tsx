@@ -1,33 +1,52 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { TextField, Button, Container, Typography, Alert, Box } from '@mui/material';
+import {
+    TextField,
+    Button,
+    Container,
+    Typography,
+    Alert,
+    Box,
+    FormGroup,
+    FormControlLabel,
+    Checkbox,
+    AlertTitle
+} from '@mui/material';
+import serverConfig from "../server-config.ts";
 
 interface Account {
     username: string;
+    login: string;
     email: string;
     password: string;
+    password2: string;
+    isAccepted: boolean;
 }
 
 interface Errors {
     username?: string;
+    login?: string;
     email?: string;
     password?: string;
+    password2?: string;
+    isAccepted?: string;
 }
 
 const SignUpForm: React.FC = () => {
     const [account, setAccount] = useState<Account>({
         username: '',
+        login: '',
         email: '',
-        password: ''
+        password: '',
+        password2: '',
+        isAccepted: false
     });
     const [errors, setErrors] = useState<Errors>({});
 
-    const navigate = useNavigate();
+    const [registerationError, setRegisterationError] = useState(false);
 
-    const handleChangeRoute = () => {
-        navigate('/home');
-    };
+    const navigate = useNavigate();
 
     const validate = (): Errors | null => {
         const validationErrors: Errors = {};
@@ -35,11 +54,22 @@ const SignUpForm: React.FC = () => {
         if (account.username.trim() === '') {
             validationErrors.username = 'Username is required!';
         }
+        if (account.login.trim() === '') {
+            validationErrors.login = 'Login is required!';
+        }
         if (account.email.trim() === '') {
             validationErrors.email = 'Email is required!';
         }
         if (account.password.trim() === '') {
             validationErrors.password = 'Password is required!';
+        }
+        if(account.password2.trim() === '') {
+            validationErrors.password2 = 'Password is required!';
+        } else if(account.password != account.password2) {
+            validationErrors.password2 = 'Passwords are not the same!';
+        }
+        if (!account.isAccepted) {
+            validationErrors.isAccepted = 'You must accept Terms of Service!';
         }
 
         return Object.keys(validationErrors).length === 0 ? null : validationErrors;
@@ -51,20 +81,17 @@ const SignUpForm: React.FC = () => {
         setErrors(validationErrors || {});
         if (validationErrors) return;
 
-        axios
-            .post('http://localhost:3001/api/user/create', {
+        axios.post(`${serverConfig.serverUrl}user/create`, {
+                login: account.login,
                 name: account.username,
                 email: account.email,
                 password: account.password
             })
             .then((response) => {
-                handleChangeRoute();
+                navigate('/login?register=true');
             })
             .catch((error) => {
-                const errorMessages: Errors = {};
-                errorMessages.password =
-                    "Given username doesn't exist or the password is wrong!";
-                setErrors(errorMessages || {});
+                setRegisterationError(true)
                 console.log(error);
             });
     };
@@ -77,12 +104,31 @@ const SignUpForm: React.FC = () => {
         }));
     };
 
+    const handleAcceptation = (_event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        setAccount((prevAccount) => ({
+            ...prevAccount,
+            isAccepted: checked
+        }));
+    }
+
     return (
-        <Container maxWidth="sm" style={{"padding": "20px"}}>
+        <Container maxWidth="md" style={{"padding": "20px"}}>
             <Typography variant="h4" component="h1" gutterBottom>
                 Sign Up
             </Typography>
             <form onSubmit={handleSubmit}>
+                <Box mb={2}>
+                    <TextField
+                        label="Login"
+                        value={account.login}
+                        name="login"
+                        onChange={handleChange}
+                        fullWidth
+                        variant="outlined"
+                        error={Boolean(errors.login)}
+                        helperText={errors.login}
+                    />
+                </Box>
                 <Box mb={2}>
                     <TextField
                         label="Username"
@@ -121,6 +167,30 @@ const SignUpForm: React.FC = () => {
                         helperText={errors.password}
                     />
                 </Box>
+                <Box mb={2}>
+                    <TextField
+                        label="Password again"
+                        value={account.password2}
+                        name="password2"
+                        onChange={handleChange}
+                        type="password"
+                        fullWidth
+                        variant="outlined"
+                        error={Boolean(errors.password2)}
+                        helperText={errors.password2}
+                    />
+                </Box>
+                <Box mb={2}>
+                    <FormGroup>
+                        <FormControlLabel
+                            control={<Checkbox />}
+                            label={"I accept Terms of Service"}
+                            value={account.isAccepted}
+                            onChange={handleAcceptation}
+                        />
+                    </FormGroup>
+                    {errors.isAccepted ? <Typography className={"MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-xzkq1u-MuiFormHelperText-root"}>{errors.isAccepted}</Typography> : <Typography />}
+                </Box>
                 <Button type="submit" variant="contained" color="primary" fullWidth>
                     Sign Up
                 </Button>
@@ -136,6 +206,14 @@ const SignUpForm: React.FC = () => {
                     </Box>
                 )}
             </form>
+            {registerationError && (
+                <Box mt={2}>
+                    <Alert severity="error">
+                        <AlertTitle>An error has occurred during registration!</AlertTitle>
+                        Probably this login or e-mail address is used by another user. Please try use another e-mail address and/or login.
+                    </Alert>
+                </Box>
+            )}
         </Container>
     );
 };

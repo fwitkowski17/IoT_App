@@ -18,10 +18,10 @@ class DataController implements Controller {
     }
 
     private initializeRoutes() {
-        this.router.get(`${this.path}/latest`, auth, this.getLatestReadingsFromAllDevices);
+        this.router.get(`${this.path}/latest`, this.getLatestReadingsFromAllDevices);
         this.router.post(`${this.path}/:id`, auth, checkIdParam, this.addData);
         this.router.get(`${this.path}/:id`, auth, checkIdParam, this.getAllDeviceData);
-        this.router.get(`${this.path}/:id/latest`, auth, checkIdParam, this.getPeriodData);
+        this.router.get(`${this.path}/:id/latest`, checkIdParam, this.getPeriodData);
         this.router.get(`${this.path}/:id/:num`, auth, checkIdParam, this.getPeriodData);
         this.router.delete(`${this.path}/all`, auth, this.cleanAllDevices);
         this.router.delete(`${this.path}/:id`, auth, checkIdParam, this.cleanDeviceData);

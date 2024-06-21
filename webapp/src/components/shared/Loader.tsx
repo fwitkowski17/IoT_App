@@ -1,12 +1,12 @@
 
 import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import {Typography} from "@mui/material";
 
 function Loader() {
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Typography align={"center"} sx={{padding: "30px"}}>
             <CircularProgress />
-        </Box>
+        </Typography>
     );
 }
 
