@@ -18,7 +18,7 @@ function Charts({data}: ChartsProps) {
     if (!data?.length) {
         return (
             <>
-                <Alert severity="warning"><AlertTitle>No data from this device!</AlertTitle></Alert>
+                <Alert severity="warning"><AlertTitle>No data from this device/time range!</AlertTitle></Alert>
             </>
         )
     }

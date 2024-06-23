@@ -7,16 +7,18 @@ import {sortElemsByDeviceId} from "../utils/helper";
 import {useParams} from "react-router-dom";
 import Loader from "./shared/Loader";
 import {EntryModel} from "../models/entry.model.ts";
-import {Alert, Snackbar} from "@mui/material";
+import {Alert, Snackbar, ToggleButton, ToggleButtonGroup} from "@mui/material";
 
 function Dashboard() {
     let {id} = useParams();
     const [data, setData] = useState<EntryModel[] | null>(null);
     const [lastItem, setLastItem] = useState(null);
-    const [additionalData, setAdditionalData] = useState<EntryModel[] | null>(null);
+    const [additionalAllData, setAdditionalAllData] = useState<EntryModel[] | null>(null);
+    const [additionalFilteredData, setAdditionalFilteredData] = useState<EntryModel[] | null>(null);
     const [loaderState, setLoaderState] = useState(true);
     const [loaderChart, setLoaderChart] = useState(true);
     const [isDeleted, setIsDeleted] = useState<boolean>(false);
+    const [dataRange, setDataRange] = useState("all");
 
     useEffect(() => {
         fetchData();
@@ -28,6 +30,15 @@ function Dashboard() {
     const handleClose = () => {
         setIsDeleted(false)
     }
+
+    const handleChange = (
+        event: React.MouseEvent<HTMLElement>,
+        newAlignment: string,
+    ) => {
+        if (newAlignment !== null) {
+            setDataRange(newAlignment);
+        }
+    };
 
     const fetchData = () => {
         setLoaderState(true);
@@ -61,7 +72,16 @@ function Dashboard() {
             .then(response => response.json())
             .then(data => {
                 setLastItem(data[data.length - 1])
-                setAdditionalData(data);
+                setAdditionalAllData(data);
+
+                const now = new Date();
+                const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+
+                const filteredData = data.filter(entry => {
+                    const entryDate = new Date(entry.readingDate);
+                    return entryDate >= oneHourAgo && entryDate <= now;
+                });
+                setAdditionalFilteredData(filteredData);
                 setLoaderChart(false);
             })
             .catch(error => {
@@ -82,11 +102,28 @@ function Dashboard() {
                 }}>
                 <div>
                     {loaderChart && <Loader/>}
-                    {!loaderChart && <CurrentState data={lastItem}/>}
+                    {!loaderChart && <>
+                        <CurrentState data={lastItem}/>
+                        <ToggleButtonGroup
+                            color="primary"
+                            value={dataRange}
+                            exclusive
+                            onChange={handleChange}
+                            aria-label="Platform"
+                            sx={{marginTop: '10px'}}
+                            fullWidth
+                        >
+                            <ToggleButton value="all">All data</ToggleButton>
+                            <ToggleButton value="1hr">Last 1 hour</ToggleButton>
+                        </ToggleButtonGroup>
+                    </>
+                    }
                 </div>
                 <div>
                     {loaderChart && <Loader/>}
-                    {!loaderChart && additionalData && <Charts data={additionalData}/>}
+                    {!loaderChart && additionalAllData && <>
+                        {(dataRange == "all") ? <Charts data={additionalAllData} /> : <Charts data={additionalFilteredData} />}
+                    </>}
                 </div>
 
             </div>
