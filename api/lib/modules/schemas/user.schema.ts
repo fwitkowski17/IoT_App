@@ -9,4 +9,4 @@ const UserSchema = new Schema<IUser>({
     isAdmin: { type: Boolean, default: true }
 });
 
-export default model<IUser>('User', UserSchema)
+export default model<IUser>('User-FW', UserSchema)

@@ -1,7 +1,6 @@
+import {EntryModel} from "./entry.model.ts";
+
 export interface DataModel {
-    humidity?: number,
-    pressure?: number
-    temperature?: number,
     deviceId: number,
-    readingDate: string
+    latestEntries: EntryModel[]
 }

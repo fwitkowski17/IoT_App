@@ -6,21 +6,28 @@ import serverConfig from "../server-config";
 import {sortElemsByDeviceId} from "../utils/helper";
 import {useParams} from "react-router-dom";
 import Loader from "./shared/Loader";
-import {DataModel} from "../models/data.model";
-import { isExpired } from "react-jwt";
+import {EntryModel} from "../models/entry.model.ts";
+import {Alert, Snackbar} from "@mui/material";
 
 function Dashboard() {
     let {id} = useParams();
-    const [data, setData] = useState<DataModel[] | null>(null);
+    const [data, setData] = useState<EntryModel[] | null>(null);
     const [lastItem, setLastItem] = useState(null);
-    const [additionalData, setAdditionalData] = useState(null);
+    const [additionalData, setAdditionalData] = useState<EntryModel[] | null>(null);
     const [loaderState, setLoaderState] = useState(true);
     const [loaderChart, setLoaderChart] = useState(true);
+    const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
     useEffect(() => {
         fetchData();
         fetchAdditionalData();
+        const urlParams = new URLSearchParams(window.location.search)
+        setIsDeleted(urlParams.get('delete') === "true")
     }, [id]);
+
+    const handleClose = () => {
+        setIsDeleted(false)
+    }
 
     const fetchData = () => {
         setLoaderState(true);
@@ -32,7 +39,7 @@ function Dashboard() {
                 'x-auth-token': localStorage.getItem('token')
             }})
             .then(response => response.json())
-            .then((data: DataModel[]) => {
+            .then((data: EntryModel[]) => {
                 const sortedData = sortElemsByDeviceId([...data]);
                 setData(sortedData);
                 setLoaderState(false);
@@ -44,7 +51,13 @@ function Dashboard() {
 
     const fetchAdditionalData = () => {
         setLoaderChart(true);
-        fetch(`${serverConfig.serverUrl}data/${id}/30`)
+        fetch(`${serverConfig.serverUrl}data/${id}/30`, {
+            method: "GET",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': ' application/json',
+                'x-auth-token': localStorage.getItem('token')
+            }})
             .then(response => response.json())
             .then(data => {
                 setLastItem(data[data.length - 1])
@@ -80,9 +93,11 @@ function Dashboard() {
 
             <div style={{backgroundColor: '#000', display: 'flex', justifyContent:'center'}}>
                 {loaderState && <Loader/>}
-                {!loaderState && data && <DevicesState data={data}/>}
+                {!loaderState && data && <DevicesState data={data} showDeleteData={true}/>}
             </div>
-
+            <Snackbar open={isDeleted} autoHideDuration={4000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={"success"} variant={"filled"} sx={{width: '100%'}}>Data successfully deleted from device!</Alert>
+            </Snackbar>
         </>
     );
 }

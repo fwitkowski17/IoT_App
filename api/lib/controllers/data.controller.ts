@@ -19,12 +19,13 @@ class DataController implements Controller {
 
     private initializeRoutes() {
         this.router.get(`${this.path}/latest`, this.getLatestReadingsFromAllDevices);
-        this.router.post(`${this.path}/:id`, auth, checkIdParam, this.addData);
+        this.router.post(`${this.path}/:id`, checkIdParam, this.addData);
         this.router.get(`${this.path}/:id`, auth, checkIdParam, this.getAllDeviceData);
         this.router.get(`${this.path}/:id/latest`, checkIdParam, this.getPeriodData);
         this.router.get(`${this.path}/:id/:num`, auth, checkIdParam, this.getPeriodData);
         this.router.delete(`${this.path}/all`, auth, this.cleanAllDevices);
         this.router.delete(`${this.path}/:id`, auth, checkIdParam, this.cleanDeviceData);
+        this.router.delete(`${this.path}/:id/:time`, auth, checkIdParam, this.cleanDeviceData)
     }
 
     private addData = async (request: Request, response: Response, next: NextFunction) => {
@@ -83,8 +84,11 @@ class DataController implements Controller {
     };
 
     private cleanDeviceData = async (request: Request, response: Response, next: NextFunction) => {
-        const { id } = request.params;
-        await this.dataService.deleteData({ deviceId: id });
+        const { id, time } = request.params;
+        if(time && Number(time) != 99) {
+            await this.dataService.deleteDataByTime({deviceId: id, valueNum: Number(time)});
+        }
+        else await this.dataService.deleteData({ deviceId: id });
         response.sendStatus(200);
     };
 

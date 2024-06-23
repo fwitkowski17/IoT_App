@@ -3,6 +3,7 @@ import {Request, Response, NextFunction, Router} from 'express';
 import { request } from 'http';
 import path from 'path';
 import Health from 'interfaces/health.interface';
+import { config } from '../config'
 
 const getUptime = require("../uptime").getUptime
 
@@ -26,21 +27,22 @@ class IndexController implements Controller {
     private sendHealthStatus = async (request: Request, response: Response) => {
         let body: Health
         const uptime = getUptime()
+        const apiVersion = config.apiVersion
         switch(process.env.AVAILABILITY) {
             case "online":
-                body = {status: "OK", uptime: uptime };
+                body = {status: "OK", uptime: uptime, apiVersion: apiVersion };
                 response.status(200).send(body);
                 break;
             case "maintenance":
-                body = {status: "Server is currently in maintenance mode.", errorDesc: "Come back later when we done all maintenance tasks. Scheduled time of getting back of service: 17:15", uptime: uptime };
+                body = {status: "Server is currently in maintenance mode.", errorDesc: "Come back later when we done all maintenance tasks. Scheduled time of getting back of service: 17:15", uptime: uptime, apiVersion: apiVersion };
                 response.status(503).send(body);
                 break;
             case "error":
-                body = {status: "Server error", errorDesc: "An error has occurred. For now data will not be parsed.", uptime: uptime };
+                body = {status: "Server error", errorDesc: "An error has occurred. For now data will not be parsed.", uptime: uptime, apiVersion: apiVersion };
                 response.status(500).send(body);
                 break;
             default:
-                body = {status: "Unknown", errorDesc: "Server is in unknown state", uptime: uptime };
+                body = {status: "Unknown", errorDesc: "Server is in unknown state", uptime: uptime, apiVersion: apiVersion };
                 response.status(500).send(body)
         }
     }

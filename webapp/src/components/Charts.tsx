@@ -1,11 +1,12 @@
 import {LineChart} from '@mui/x-charts/LineChart';
-import {DataModel} from "../models/data.model";
+import {EntryModel} from "../models/entry.model.ts";
+import {Alert, AlertTitle} from "@mui/material";
 
 interface ChartsProps {
-    data: DataModel[];
+    data: EntryModel[];
 }
 function Charts({data}: ChartsProps) {
-    const chartData = data || [].map((item: DataModel) => ({
+    const chartData = data || [].map((item: EntryModel) => ({
         temperature: item.temperature,
         pressure: item.pressure,
         humidity: item.humidity,
@@ -17,7 +18,7 @@ function Charts({data}: ChartsProps) {
     if (!data?.length) {
         return (
             <>
-                <h2>No data</h2>
+                <Alert severity="warning"><AlertTitle>No data from this device!</AlertTitle></Alert>
             </>
         )
     }
@@ -28,9 +29,9 @@ function Charts({data}: ChartsProps) {
                 width={1000}
                 height={300}
                 series={[
-                    {data: chartData.map((item:DataModel) => item.pressure !== undefined ? item.pressure/10 : null), label: 'Pressure x10 [hPa]'},
-                    {data: chartData.map((item:DataModel) => item.humidity !== undefined ? item.humidity : null), label: 'Humidity [%]'},
-                    {data: chartData.map((item:DataModel) => item.temperature !== undefined ? item.temperature : null), label: 'Temperature [°C]'},
+                    {data: chartData.map((item:EntryModel) => item.pressure !== undefined ? item.pressure/10 : null), label: 'Pressure x10 [hPa]'},
+                    {data: chartData.map((item:EntryModel) => item.humidity !== undefined ? item.humidity : null), label: 'Humidity [%]'},
+                    {data: chartData.map((item:EntryModel) => item.temperature !== undefined ? item.temperature : null), label: 'Temperature [°C]'},
                 ]}
                 xAxis={[{scaleType: 'point', data: xLabels}]}
             />}

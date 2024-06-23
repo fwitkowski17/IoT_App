@@ -28,8 +28,8 @@ const user_no_logged: NavbarItem[] = [
 ]
 
 const pages: NavbarItem[] = [
+    {label: 'Device summary', to: '/'},
     {label: 'Devices state', to: '/device/1'},
-    {label: 'Device summary', to: '/'}
 ]
 
 function Navbar() {
@@ -58,7 +58,7 @@ function Navbar() {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': ' application/json',
-                'x-access-token': token
+                'x-auth-token': token
             }
         })
             .then((response) => {
@@ -138,45 +138,31 @@ function Navbar() {
                                         <Link style={{color: 'white'}} to={page.to}>{page.label}</Link>
                                     </Typography>
                                 </MenuItem>
-                                )) :
-                                <MenuItem key={"Logout"} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign={"center"}>
-                                        <Link onClick={handleLogout} style={{color: 'white'}}>Logout</Link>
-                                    </Typography>
-                                </MenuItem>
-                            }
+                                )) : ''}
                         </Menu>
                     </Box>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                         {pages.map((page) => (
-                            <Button
+                            <Typography component={"button"}
                                 key={page.label}
                                 onClick={handleCloseNavMenu}
-                                sx={{my: 2, color: 'white', display: 'block'}}
+                                        sx={{my: 2, color: 'white', display: 'block', margin: '10px'}}
                             >
-                                {page.label}
-                            </Button>
-                        ))}
-                    </Box>
-
-                    <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, justifyContent: 'flex-end'}}>
-                        {isExpired(localStorage.getItem('token')) ? user_no_logged.map((page) => (
-                            <Typography key={page.label} variant={"button"} component={"button"} sx={{my: 2, color: 'white', display: 'block', margin: '10px'}}>
                                 <Link style={{color: 'white'}} to={page.to}>{page.label}</Link>
                             </Typography>
-                        )) :
-                            <Button
-                                key={"Logout"}
-                                onClick={handleLogout}
-                                sx={{my: 2, color: 'white', display: 'block'}}
-                            >Logout</Button>
-                        }
+                        ))}
                     </Box>
+                    {isExpired(localStorage.getItem('token')) ? <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}, justifyContent: 'flex-end'}}>
+                        {user_no_logged.map((page) => (
+                            <Typography key={page.label} variant={"button"} component={"button"} sx={{my: 2, color: 'white', display: 'block', margin: '10px'}}>
+                                <Link style={{color: 'white'}} to={page.to}>{page.label}</Link>
+                            </Typography>))}
+                        </Box>: ''}
 
-                    {false && <Box sx={{flexGrow: 0}}>
+                    {!isExpired(localStorage.getItem('token')) && <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg"/>
+                                <Avatar alt="Remy Sharp" src="/assets/ki.jpg"/>
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -195,6 +181,16 @@ function Navbar() {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
+                            <MenuItem key={"Account"} onClick={handleCloseNavMenu}>
+                                <Typography textAlign={"center"}>
+                                    <Link style={{color: 'white'}} to={'/account'}>Account</Link>
+                                </Typography>
+                            </MenuItem>
+                            <MenuItem key={"Logout"} onClick={handleCloseNavMenu}>
+                                <Typography textAlign={"center"}>
+                                    <Link onClick={handleLogout} style={{color: 'white'}}>Logout</Link>
+                                </Typography>
+                            </MenuItem>
                         </Menu>
                     </Box>}
                 </Toolbar>

@@ -10,6 +10,10 @@
     background-color: #264357;
 }
 
+.tile-device-hugediffer {
+    background-color: #f44336!important;
+}
+
 .tile-device-inside.active {
-    background-color: #02b1af; /* Kolor tła dla aktywnego kafelka */
+    background-color: #02b1af!important; /* Kolor tła dla aktywnego kafelka */
 }

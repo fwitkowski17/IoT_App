@@ -19,11 +19,11 @@ interface Errors {
 interface State {
     account: Account;
     errors: Errors;
-    success: boolean;
+    register: boolean;
     logout: boolean;
     showInfo: boolean;
     loginError: boolean;
-    loginSuccess: boolean;
+    unexpectedError: boolean;
 }
 
 class LoginForm extends Component<{}, State> {
@@ -33,19 +33,19 @@ class LoginForm extends Component<{}, State> {
             password: ""
         },
         errors: {},
-        success: false,
+        register: false,
         logout: false,
         showInfo: false,
         loginError: false,
-        loginSuccess: false
+        unexpectedError: false
     };
 
     componentDidMount() {
         const urlParams = new URLSearchParams(window.location.search)
-        const success = urlParams.get('success') === "true"
+        const register = urlParams.get('register') === "true"
         const logout = urlParams.get('logout') === "true"
         const showInfo = urlParams.get('showInfo') === "true"
-        this.setState({success, logout, showInfo})
+        this.setState({register, logout, showInfo})
     }
 
     validate = (): Errors | null => {
@@ -80,12 +80,11 @@ class LoginForm extends Component<{}, State> {
         }).then(response => {
             if(response.status == 200) {
                 localStorage.setItem("token", response.data.token)
-                this.setState({loginSuccess: true})
+                window.location.replace("/")
             }
         }).catch(error => {
-            if(error.response.status == 401) {
-                this.setState({loginError: true})
-            }
+            if(error.response.status == 401) this.setState({loginError: true})
+            else this.setState({unexpectedError: true})
             console.error('Error logging in!', error)
         })
     };
@@ -98,9 +97,8 @@ class LoginForm extends Component<{}, State> {
 
     render() {
         return (<>
-            {this.state.loginSuccess && (<Navigate replace to={"/"} />)}
             <Container maxWidth="sm" style={{"padding": "30px"}}>
-                {this.state.success && (<Alert severity={"success"} sx={{"margin-bottom": "20px"}}>
+                {this.state.register && (<Alert severity={"success"} sx={{"margin-bottom": "20px"}}>
                     <AlertTitle>Account successfully created!</AlertTitle>
                     Now you can login with provided details.
                 </Alert>)}
@@ -108,10 +106,15 @@ class LoginForm extends Component<{}, State> {
                     <AlertTitle>Incorrect login details!</AlertTitle>
                     Incorrect provided login or password.
                 </Alert>)}
+                {this.state.unexpectedError && (<Alert severity={"error"} sx={{"margin-bottom": "20px"}}>
+                    <AlertTitle>Unexpected error!</AlertTitle>
+                    Unexpected error has occurred.
+                </Alert>)}
                 {this.state.logout && (<Alert severity={"info"} sx={{"margin-bottom": "20px"}}>
                     <AlertTitle>Log out</AlertTitle>
                     User successfully logged out.
                 </Alert>)}
+
                 {this.state.showInfo && (<Alert severity={"warning"} sx={{"margin-bottom": "20px"}}>
                     <AlertTitle>No permissions for this feature</AlertTitle>
                     To access detailed data, you need to log in.

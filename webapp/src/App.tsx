@@ -10,6 +10,7 @@ import Login from "./components/Login.tsx";
 import SignUpForm from "./components/SignUpForm.tsx";
 import ServerAvailability from "./components/ServerAvailability.tsx";
 import Footer from "./components/shared/Footer.tsx"
+import Account from "./components/Account.tsx";
 
 const darkTheme = createTheme({
     palette: {
@@ -29,7 +30,8 @@ function App() {
                         <Route path="/" element={<Home/>}/>
                         <Route path="/login" element={<Login/>}/>
                         <Route path="/register" element={<SignUpForm />}/>
-                        <Route path="/device/:id" element={isExpired(localStorage.getItem('token')) ? <Navigate replace to={"/login?showInfo=true"}/> : <Dashboard/> } />
+                        <Route path="/device/:id" element={isExpired(localStorage.getItem("token") || '') ? <Navigate replace to={"/login?showInfo=true"}/> : <Dashboard/> } />
+                        <Route path="/account" element={isExpired(localStorage.getItem("token") || '') ? <Navigate replace to={"/login?showInfo=true"}/> : <Account />} />
                     </Routes>
                 </ServerAvailability>
                 <Footer></Footer>

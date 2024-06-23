@@ -24,7 +24,17 @@ class UserService {
             }
         } catch (error) {
             console.error('Wystąpił błąd podczas pobierania danych:', error);
-            throw new Error('Wystąpił błąd podczas pobierania danych');
+            throw new Error('Wystąpił błąd podczas pobierania danych: ' + error);
+        }
+    }
+
+    public async removeUser(userId: string) {
+        try {
+            const result = await UserModel.deleteOne({_id: userId})
+            if(result) return result
+        } catch(error) {
+            console.error('Wystąpił błąd podczas usuwania użytkownika:', error);
+            throw new Error('Wystąpił błąd podczas usuwania użytkownika');
         }
     }
 }

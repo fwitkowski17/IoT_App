@@ -1,9 +1,9 @@
 import Tile from "./shared/Tile";
 import {useParams} from 'react-router-dom';
-import {DataModel} from "../models/data.model";
+import {EntryModel} from "../models/entry.model.ts";
 
 interface CurrentStateProps {
-    data: DataModel | null;
+    data: EntryModel | null;
 }
 
 function CurrentState({data}: CurrentStateProps) {

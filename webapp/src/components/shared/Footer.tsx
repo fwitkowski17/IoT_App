@@ -1,13 +1,13 @@
 import React from "react";
-import {Container, Typography} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 
 function Footer() {
     return <>
-        <Container sx={{backgroundColor: 'black'}} style={{"padding": "20px"}}>
-            <Typography align={"center"} component={"h6"} variant={"h6"}>
+        <Box sx={{backgroundColor: 'black', width: "100%", padding: '15px'}}>
+            <Typography textAlign={"center"} component={"p"} variant={"p"}>
                 &copy; 2024 Copyright by Filip Witkowski
             </Typography>
-        </Container>
+        </Box>
     </>
 }
 

@@ -17,7 +17,6 @@ import serverConfig from "../server-config.ts";
 
 interface Account {
     username: string;
-    login: string;
     email: string;
     password: string;
     password2: string;
@@ -26,7 +25,6 @@ interface Account {
 
 interface Errors {
     username?: string;
-    login?: string;
     email?: string;
     password?: string;
     password2?: string;
@@ -36,7 +34,6 @@ interface Errors {
 const SignUpForm: React.FC = () => {
     const [account, setAccount] = useState<Account>({
         username: '',
-        login: '',
         email: '',
         password: '',
         password2: '',
@@ -53,9 +50,6 @@ const SignUpForm: React.FC = () => {
 
         if (account.username.trim() === '') {
             validationErrors.username = 'Username is required!';
-        }
-        if (account.login.trim() === '') {
-            validationErrors.login = 'Login is required!';
         }
         if (account.email.trim() === '') {
             validationErrors.email = 'Email is required!';
@@ -82,13 +76,14 @@ const SignUpForm: React.FC = () => {
         if (validationErrors) return;
 
         axios.post(`${serverConfig.serverUrl}user/create`, {
-                login: account.login,
                 name: account.username,
                 email: account.email,
                 password: account.password
             })
             .then((response) => {
-                navigate('/login?register=true');
+                if(response.status == 200) {
+                    navigate('/login?register=true');
+                }
             })
             .catch((error) => {
                 setRegisterationError(true)
@@ -120,18 +115,6 @@ const SignUpForm: React.FC = () => {
                 <Box mb={2}>
                     <TextField
                         label="Login"
-                        value={account.login}
-                        name="login"
-                        onChange={handleChange}
-                        fullWidth
-                        variant="outlined"
-                        error={Boolean(errors.login)}
-                        helperText={errors.login}
-                    />
-                </Box>
-                <Box mb={2}>
-                    <TextField
-                        label="Username"
                         value={account.username}
                         name="username"
                         onChange={handleChange}
