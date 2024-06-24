@@ -78,7 +78,7 @@ function Home() {
                     padding: '50px'
                 }}>
                 <Container maxWidth="lg">
-                    <h2>Data summary from last 1 hour</h2>
+                    <h2>Data summary from last hour</h2>
                     <Charts data={hourData}/>
                 </Container>
             </div>}
