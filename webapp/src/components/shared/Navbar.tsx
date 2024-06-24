@@ -75,28 +75,8 @@ function Navbar() {
     return (
         <AppBar position="static">
             <Container maxWidth={false} sx={{backgroundColor: 'black'}}>
-                <Toolbar disableGutters>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component={Link}
-                        to="/"
-                        sx={{
-                            mr: 2,
-                            display: {xs: 'none', md: 'flex'},
-                            alignItems: 'center',
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        <LanguageIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
-                        IoT Dashboard
-                    </Typography>
-
-                    <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
+                <Toolbar disableGutters sx={{display: 'flex', justifyContent: 'space-between'}}>
+                    <Box sx={{flexGrow: {xs: 0, md: 1}, display: {xs: 'flex', md: 'none'}}}>
                         <IconButton
                             size="large"
                             aria-label="account of current user"
@@ -141,6 +121,25 @@ function Navbar() {
                                 )) : ''}
                         </Menu>
                     </Box>
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        component={Link}
+                        to="/"
+                        sx={{
+                            mr: 2,
+                            display: 'flex',
+                            alignItems: 'center',
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            letterSpacing: '.3rem',
+                            color: 'inherit',
+                            textDecoration: 'none',
+                        }}
+                    >
+                        <LanguageIcon sx={{display:'flex', mr: 1}}/>
+                        IoT Dashboard
+                    </Typography>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                         {pages.map((page) => (
                             <Typography component={"button"}
