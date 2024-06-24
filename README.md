@@ -7,6 +7,7 @@ Aplikacja na laboratorium z przedmiotu *Technologie webowe w aplikacjach interne
 Przed uruchomieniem serwera należy utworzyć plik `.env`. W nim należy umieścić następującą zawartość (bez niej aplikacja się nie uruchomi):
 ```ini
 MONGODB_URI='<link do bazy danych MongoDB>'
+AVAILABILITY="online"
 ```
 Dodatkowo w pliku można zdefiniować inne parametry, które nadpiszą domyślne:
 ```ini
@@ -25,19 +26,26 @@ git clone https://github.com/fwitkowski17/IoT_App.git
 cd IoT_App/api
 npm install
 echo MONGODB_URI='<link do bazy MongoDB>' > .env
+echo AVAILABILITY='online' >> .env
 npm run start
 ```
 
 ### Endpointy
 * **GET** /api/data/latest
+* **GET** /api/data/hour
 * **GET** /api/data/{id}/latest
 * **GET** /api/data/{id}
 * **GET** /api/data/{id}/{num}
+* **GET** /api/health
+* **GET** /api/user
 * **POST** /api/data/{id}
 * **POST** /api/user/auth
 * **POST** /api/user/create
+* **PUT** /api/user/update
 * **DELETE** /api/data/all
 * **DELETE** /api/data/{id}
+* **DELETE** /api/data/{id}/{time}
+* **DELETE** /api/user/delete
 * **DELETE** /api/user/logout/{userId} 
 
 ## Wykonane laboratoria

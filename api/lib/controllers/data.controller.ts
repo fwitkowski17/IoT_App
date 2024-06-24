@@ -6,8 +6,6 @@ import { IData } from '../modules/models/data.model';
 import Joi from 'joi';
 import { auth } from '../middlewares/auth.middleware';
 
-let testArr = [4,5,6,3,5,3,7,5,13,5,6,4,3,6,3,6]
-
 class DataController implements Controller {
     public path = '/api/data';
     public router = Router();
@@ -19,6 +17,7 @@ class DataController implements Controller {
 
     private initializeRoutes() {
         this.router.get(`${this.path}/latest`, this.getLatestReadingsFromAllDevices);
+        this.router.get(`${this.path}/hour`, auth, this.getReadingsFromHour);
         this.router.post(`${this.path}/:id`, checkIdParam, this.addData);
         this.router.get(`${this.path}/:id`, auth, checkIdParam, this.getAllDeviceData);
         this.router.get(`${this.path}/:id/latest`, checkIdParam, this.getPeriodData);
@@ -82,6 +81,11 @@ class DataController implements Controller {
         const allData = await this.dataService.getAllNewest();
         response.status(200).json(allData);
     };
+
+    private getReadingsFromHour = async (request: Request, response: Response, next: NextFunction) => {
+        const allData = await this.dataService.getHourReadings();
+        response.status(200).json(allData);
+    }
 
     private cleanDeviceData = async (request: Request, response: Response, next: NextFunction) => {
         const { id, time } = request.params;

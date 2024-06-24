@@ -55,6 +55,11 @@ export default class DataService {
         return latestData.sort((a: IData, b:IData) => a.deviceId - b.deviceId);
     }
 
+    public async getHourReadings() {
+        const cutoffDate = new Date(Date.now() - 3600000);
+        return (await DataModel.find({ readingDate: {$gte: cutoffDate}}, { __v: 0, _id: 0 }).sort({$natural:-1})).reverse();
+    }
+
     public async deleteData(query: Query<number | string | boolean>) {
         try {
             await DataModel.deleteMany(query);

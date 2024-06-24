@@ -4,5 +4,5 @@ export const config = {
     supportedDevicesNum: 17,
     databaseUrl: process.env.MONGODB_URI || '',
     JwtSecret: process.env.JWT_SECRET || 'secret',
-    apiVersion: '0.9.2'
+    apiVersion: '1.0.0'
 };
