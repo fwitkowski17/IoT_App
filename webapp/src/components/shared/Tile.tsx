@@ -102,7 +102,7 @@ function Tile({id, hasData, data, active = false, details = true, showDelete = f
                 <Typography style={{borderBottom: '5px solid #fff', paddingBottom: '10px', display: 'flex', justifyContent: 'space-between'}} variant="h5"
                             component="div">
                     Device No. {id}
-                    {soDiff && <Tooltip title={"Difference between two last reading is over 20%"}>
+                    {soDiff && <Tooltip title={"Difference between two last readings is over 20%"}>
                         <WarningIcon />
                     </Tooltip>}
                 </Typography>
