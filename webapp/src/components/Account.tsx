@@ -218,7 +218,7 @@ function Account() {
                     />
                 </Box>
                 <DialogActions>
-                    <Button onClick={updatePassword} size="small"><KeyIcon /> Update password</Button>
+                    <Button onClick={updatePassword} size="small">Update password</Button>
                     <Button onClick={handleClosePassword} size="small">Close</Button>
                 </DialogActions>
             </>

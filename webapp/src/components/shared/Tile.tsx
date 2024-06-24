@@ -17,11 +17,13 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle, FormControl,
-    InputLabel, Select, SelectChangeEvent, Snackbar
+    InputLabel, Select, SelectChangeEvent
 } from "@mui/material";
+import WarningIcon from '@mui/icons-material/Warning';
 import MenuItem from "@mui/material/MenuItem";
 import serverConfig from "../../server-config.ts";
 import axios from "axios";
+import Tooltip from "@mui/material/Tooltip";
 
 interface TileProps {
     data: EntryModel | null;
@@ -97,9 +99,12 @@ function Tile({id, hasData, data, active = false, details = true, showDelete = f
         <>
         <Card className={`tile-device-inside ${active ? 'active' : ''} ${soDiff ? 'tile-device-hugediffer' : ''}`} sx={{minWidth: 275}}>
             <CardContent style={{minHeight: '200px'}}>
-                <Typography style={{borderBottom: '5px solid #fff', paddingBottom: '10px'}} variant="h5"
+                <Typography style={{borderBottom: '5px solid #fff', paddingBottom: '10px', display: 'flex', justifyContent: 'space-between'}} variant="h5"
                             component="div">
                     Device No. {id}
+                    {soDiff && <Tooltip title={"Difference between two last reading is over 20%"}>
+                        <WarningIcon />
+                    </Tooltip>}
                 </Typography>
                 {!hasData && <Typography variant="h6"
                                          component="div">
