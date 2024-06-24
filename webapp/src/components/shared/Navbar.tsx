@@ -64,7 +64,7 @@ function Navbar() {
             .then((response) => {
                 if(response.status == 200) {
                     localStorage.removeItem('token');
-                    navigate("/login?logout=true");
+                    window.location.replace("/login?logout=true");
                 }
             })
             .catch((error: Error) => {

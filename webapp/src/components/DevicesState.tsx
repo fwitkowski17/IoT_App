@@ -18,16 +18,16 @@ function DevicesState({data, showDeleteData} : DeviceStateProps) {
         const firstData = array[0];
         const lastData = array[1];
 
-        const temperatureCalc = firstData.temperature - lastData.temperature
-        const temperatureDiffPercentage = Math.abs(temperatureCalc) / (temperatureCalc/2) * 100;
+        const temperatureCalc = firstData.temperature - lastData.temperature;
+        const temperatureDiffPercentage = Math.abs(temperatureCalc / firstData.temperature * 100);
         if(temperatureDiffPercentage > percentageDifferAllowed) return true;
 
-        const humidityCalc = firstData.humidity - lastData.humidity
-        const humidityDiffPercentage = Math.abs(humidityCalc) / (humidityCalc/2) * 100;
+        const humidityCalc = firstData.humidity - lastData.humidity;
+        const humidityDiffPercentage = Math.abs(humidityCalc / firstData.humidity * 100);
         if(humidityDiffPercentage > percentageDifferAllowed) return true;
 
-        const pressureCalc = firstData.pressure - lastData.pressure
-        const pressureDiffPercentage = Math.abs(pressureCalc) / (pressureCalc/2) * 100;
+        const pressureCalc = firstData.pressure - lastData.pressure;
+        const pressureDiffPercentage = Math.abs(pressureCalc / firstData.pressure * 100);
         return pressureDiffPercentage > percentageDifferAllowed;
     }
 
